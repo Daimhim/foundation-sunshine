@@ -35,7 +35,11 @@ option(FETCH_DRIVER_DEPS "Download driver dependencies from GitHub Releases" ON)
 option(DRIVER_DEPS_REQUIRED "Treat missing driver dependencies as a fatal error" ON)
 
 # Version pins
-set(VMOUSE_DRIVER_VERSION "v1.2.0" CACHE STRING "ZakoVirtualMouse driver version tag")
+# Daimhim fork: pinned to v1.3.2 because we build on our own fork without the
+# private-repo DRIVER_DOWNLOAD_TOKEN, so vmouse is fetched from the PUBLIC mirror
+# (AlkaidLab/zako-vmouse-release). That mirror dropped the old v1.2.0 tag (which
+# upstream still pins via its private repo) — v1.3.2 is the latest public tag.
+set(VMOUSE_DRIVER_VERSION "v1.3.2" CACHE STRING "ZakoVirtualMouse driver version tag")
 set(VDD_DRIVER_VERSION "v0.15.5-zak2333" CACHE STRING "ZakoVDD driver version tag")
 set(VDD_WIN10_DRIVER_VERSION "v0.14.3-rc1-edid13-test" CACHE STRING "Win10-pinned ZakoVDD driver version tag")
 set(VDD_DRIVER_ASSET_NAME "zakovdd.zip" CACHE STRING "Latest ZakoVDD release asset name")
