@@ -371,42 +371,6 @@ namespace system_tray {
     platf::restart();
   };
 
-  auto terminate_gui_processes = []() {
-  #ifdef _WIN32
-    BOOST_LOG(info) << "Terminating sunshine-gui.exe processes..."sv;
-
-    // Find and terminate sunshine-gui.exe processes
-    HANDLE snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
-    if (snapshot != INVALID_HANDLE_VALUE) {
-      PROCESSENTRY32W pe32;
-      pe32.dwSize = sizeof(PROCESSENTRY32W);
-
-      if (Process32FirstW(snapshot, &pe32)) {
-        do {
-          // Check if this process is sunshine-gui.exe
-          if (wcscmp(pe32.szExeFile, L"sunshine-gui.exe") == 0) {
-            BOOST_LOG(info) << "Found sunshine-gui.exe (PID: " << pe32.th32ProcessID << "), terminating..."sv;
-
-            // Open process handle
-            HANDLE process_handle = OpenProcess(PROCESS_TERMINATE, FALSE, pe32.th32ProcessID);
-            if (process_handle != NULL) {
-              // Terminate the process
-              if (TerminateProcess(process_handle, 0)) {
-                BOOST_LOG(info) << "Successfully terminated sunshine-gui.exe"sv;
-              }
-              CloseHandle(process_handle);
-            }
-          }
-        } while (Process32NextW(snapshot, &pe32));
-      }
-      CloseHandle(snapshot);
-    }
-  #else
-    // For non-Windows platforms, this is a no-op
-    BOOST_LOG(debug) << "GUI process termination not implemented for this platform"sv;
-  #endif
-  };
-
   auto tray_quit_cb = [](struct tray_menu *item) {
     BOOST_LOG(info) << "Quitting from system tray"sv;
 
@@ -422,9 +386,6 @@ namespace system_tray {
       MB_ICONQUESTION | MB_YESNO);
 
     if (msgboxID == IDYES) {
-      // First, terminate sunshine-gui.exe if it's running
-      terminate_gui_processes();
-
       // If running as service (no console window), use ERROR_SHUTDOWN_IN_PROGRESS
       // Otherwise, use exit code 0 to prevent service restart
       if (GetConsoleWindow() == NULL) {

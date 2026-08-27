@@ -1175,21 +1175,10 @@ namespace platf {
    */
   void
   open_url(const std::string &url) {
-    const std::string cmd_path = "assets/gui/sunshine-gui.exe";
-    const std::string cmd_args = "--url=" + url;
-
-    boost::process::v1::environment _env = boost::this_process::environment();
-    auto working_dir = boost::filesystem::path();
-    std::error_code ec;
-
-    auto child = run_command(false, false, cmd_path + " " + cmd_args, working_dir, _env, nullptr, ec, nullptr);
-    if (ec) {
-      BOOST_LOG(warning) << "Couldn't open url ["sv << url << "]: System: "sv << ec.message();
-    }
-    else {
-      BOOST_LOG(debug) << "Opened url ["sv << url << "]"sv;
-      child.detach();
-    }
+    // Web-only distribution: the bundled sunshine-gui.exe webview is no longer
+    // shipped, so open the URL in the system default browser instead.
+    // Management is done via the web UI at https://localhost:47990.
+    open_url_in_browser(url);
   }
 
   /**

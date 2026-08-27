@@ -7,7 +7,6 @@
 #define MyAppPublisher "@CPACK_PACKAGE_VENDOR@"
 #define MyAppURL "@CMAKE_PROJECT_HOMEPAGE_URL@"
 #define MyAppExeName "@CMAKE_PROJECT_NAME@.exe"
-#define MyAppGUIExeName "sunshine-gui.exe"
 #define MySourceDir "@INNO_STAGING_DIR@"
 #define MyIconFile "@CMAKE_SOURCE_DIR@\sunshine.ico"
 #define MyWelcomeBmp "@CMAKE_SOURCE_DIR@\welcome.bmp"
@@ -97,7 +96,6 @@ english.StatusInstallVmouse=Installing virtual mouse driver...
 english.StatusInstallService=Installing system service...
 english.StatusAutostart=Configuring autostart...
 english.FinishOpenDocs=Open documentation
-english.FinishLaunchGUI=Launch Sunshine GUI
 english.MsgOldNSISDetected=Detected a previous NSIS installation of Sunshine.%nIt must be uninstalled before continuing.%n%nUninstall the previous version now?
 english.MsgOldNSISFailed=The previous installation could not be fully removed.%nPlease uninstall it manually and try again.
 english.MsgOldNSISStaleRegistry=The previous installation files appear to be gone, but registry entries remain.%nClean up the leftover registry and continue installing?
@@ -137,7 +135,6 @@ chinesesimplified.StatusInstallVmouse=正在安装虚拟鼠标驱动...
 chinesesimplified.StatusInstallService=正在安装系统服务...
 chinesesimplified.StatusAutostart=正在配置自动启动...
 chinesesimplified.FinishOpenDocs=打开使用文档
-chinesesimplified.FinishLaunchGUI=启动 Sunshine 管理界面
 chinesesimplified.MsgOldNSISDetected=检测到旧版 NSIS 安装的 Sunshine。%n需要先卸载才能继续。%n%n是否现在卸载旧版本？
 chinesesimplified.MsgOldNSISFailed=无法完全移除旧版安装。%n请手动卸载后重试。
 chinesesimplified.MsgOldNSISStaleRegistry=旧版本的文件已经不存在，但注册表中仍残留旧版的卸载信息。%n是否清理残留的注册表项并继续安装？
@@ -197,7 +194,7 @@ Source: "{#MySourceDir}\scripts\IMAGE_MIGRATION.md"; DestDir: "{app}\scripts"; F
 ; PATH management
 Source: "{#MySourceDir}\scripts\update-path.bat"; DestDir: "{app}\scripts"; Flags: ignoreversion; Components: application
 
-; Assets (includes GUI, shaders, web UI, etc.)
+; Assets (shaders, web UI, etc.)
 Source: "{#MySourceDir}\assets\*"; DestDir: "{app}\assets"; Flags: ignoreversion recursesubdirs createallsubdirs; Components: assets
 
 ; Helper tools
@@ -287,7 +284,6 @@ Filename: "https://docs.qq.com/aio/DSGdQc3htbFJjSFdO?p=DXpTjzl2kZwBjN7jlRMkRJ"; 
 ; Stop running processes first. We force-kill the service binary
 ; (sunshinesvc.exe) here as well, otherwise `sc stop` later may block waiting
 ; on its stop handler — which is the typical "uninstaller appears frozen" symptom.
-Filename: "taskkill"; Parameters: "/f /im sunshine-gui.exe"; Flags: runhidden; RunOnceId: "KillGUI"
 Filename: "taskkill"; Parameters: "/f /im sunshine.exe"; Flags: runhidden; RunOnceId: "KillSunshine"
 Filename: "taskkill"; Parameters: "/f /im sunshinesvc.exe"; Flags: runhidden; RunOnceId: "KillSunshineSvc"
 ; Remove system components
@@ -768,7 +764,6 @@ begin
   Exec('net', 'stop SunshineService', '', SW_HIDE, ewWaitUntilTerminated, ResultCode);
   // Kill any running processes
   Exec('taskkill', '/f /im sunshine.exe', '', SW_HIDE, ewWaitUntilTerminated, ResultCode);
-  Exec('taskkill', '/f /im sunshine-gui.exe', '', SW_HIDE, ewWaitUntilTerminated, ResultCode);
   Exec('taskkill', '/f /im sunshinesvc.exe', '', SW_HIDE, ewWaitUntilTerminated, ResultCode);
   // Small delay to allow processes to release files
   Sleep(1000);

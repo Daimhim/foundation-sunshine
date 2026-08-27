@@ -74,17 +74,8 @@ FunctionEnd
 !define MUI_FINISHPAGE_RUN_TEXT '打开使用教程'
 !define MUI_FINISHPAGE_RUN_FUNCTION OpenDocumentation
 
-; 复选框2: 启动 Sunshine GUI（默认勾选）
-!define MUI_FINISHPAGE_SHOWREADME
-!define MUI_FINISHPAGE_SHOWREADME_TEXT '启动 Sunshine GUI'
-!define MUI_FINISHPAGE_SHOWREADME_FUNCTION LaunchGUI
-
 Function OpenDocumentation
     ExecShell 'open' 'https://docs.qq.com/aio/DSGdQc3htbFJjSFdO?p=DXpTjzl2kZwBjN7jlRMkRJ'
-FunctionEnd
-
-Function LaunchGUI
-    Exec '\$INSTDIR\\\\assets\\\\gui\\\\sunshine-gui.exe'
 FunctionEnd
 ")
 
@@ -217,7 +208,6 @@ set(CPACK_NSIS_EXTRA_UNINSTALL_COMMANDS
         
         ; 停止运行的程序
         DetailPrint '停止运行的程序...'
-        nsExec::ExecToLog 'taskkill /f /im sunshine-gui.exe'
         nsExec::ExecToLog 'taskkill /f /im sunshine.exe'
         
         ; 卸载系统组件
@@ -275,10 +265,6 @@ set(CPACK_NSIS_CREATE_ICONS_EXTRA
         CreateShortCut '\$INSTDIR\\\\${CMAKE_PROJECT_NAME}.lnk' \
             '\$INSTDIR\\\\${CMAKE_PROJECT_NAME}.exe' '--shortcut' '\$INSTDIR\\\\${CMAKE_PROJECT_NAME}.exe' 0
 
-        ; GUI管理工具快捷方式 - 使用GUI程序的内嵌图标
-        CreateShortCut '\$SMPROGRAMS\\\\$STARTMENU_FOLDER\\\\Sunshine GUI.lnk' \
-            '\$INSTDIR\\\\assets\\\\gui\\\\sunshine-gui.exe' '' '\$INSTDIR\\\\assets\\\\gui\\\\sunshine-gui.exe' 0
-
         ; 工具文件夹快捷方式 - 使用主程序图标
         CreateShortCut '\$SMPROGRAMS\\\\$STARTMENU_FOLDER\\\\Sunshine Tools.lnk' \
             '\$INSTDIR\\\\tools' '' '\$INSTDIR\\\\${CMAKE_PROJECT_NAME}.exe' 0
@@ -287,9 +273,6 @@ set(CPACK_NSIS_CREATE_ICONS_EXTRA
         CreateShortCut '\$DESKTOP\\\\Sunshine.lnk' \
             '\$INSTDIR\\\\${CMAKE_PROJECT_NAME}.exe' '--shortcut' '\$INSTDIR\\\\${CMAKE_PROJECT_NAME}.exe' 0
 
-        ; 创建桌面快捷方式 - GUI管理工具
-        CreateShortCut '\$DESKTOP\\\\Sunshine GUI.lnk' \
-            '\$INSTDIR\\\\assets\\\\gui\\\\sunshine-gui.exe' '' '\$INSTDIR\\\\assets\\\\gui\\\\sunshine-gui.exe' 0
         ")
 
 set(CPACK_NSIS_DELETE_ICONS_EXTRA
@@ -315,8 +298,6 @@ set(CPACK_NSIS_DELETE_ICONS_EXTRA
         ; 注意：$MUI_TEMP 是 NSIS 内部变量，指向开始菜单文件夹，由安装程序控制
         IfFileExists '\$SMPROGRAMS\\\\$MUI_TEMP\\\\Sunshine.lnk' 0 +2
         Delete '\$SMPROGRAMS\\\\$MUI_TEMP\\\\Sunshine.lnk'
-        IfFileExists '\$SMPROGRAMS\\\\$MUI_TEMP\\\\Sunshine GUI.lnk' 0 +2
-        Delete '\$SMPROGRAMS\\\\$MUI_TEMP\\\\Sunshine GUI.lnk'
         IfFileExists '\$SMPROGRAMS\\\\$MUI_TEMP\\\\Sunshine Tools.lnk' 0 +2
         Delete '\$SMPROGRAMS\\\\$MUI_TEMP\\\\Sunshine Tools.lnk'
         IfFileExists '\$SMPROGRAMS\\\\$MUI_TEMP\\\\Sunshine Service.lnk' 0 +2
@@ -329,8 +310,6 @@ set(CPACK_NSIS_DELETE_ICONS_EXTRA
         ;       如果攻击者创建符号链接，NSIS 的 Delete 会删除链接本身，不会跟随到目标
         IfFileExists '\$DESKTOP\\\\Sunshine.lnk' 0 +2
         Delete '\$DESKTOP\\\\Sunshine.lnk'
-        IfFileExists '\$DESKTOP\\\\Sunshine GUI.lnk' 0 +2
-        Delete '\$DESKTOP\\\\Sunshine GUI.lnk'
         ")
 
 # ==============================================================================

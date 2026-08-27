@@ -113,9 +113,6 @@ namespace system_tray {
   std::string get_localized_string(const std::string& key);
   std::wstring get_localized_wstring(const std::string& key);
   
-  // GUI process management
-  void terminate_gui_processes();
-
   // VDD menu management
   void update_vdd_menu();
 }  // namespace system_tray

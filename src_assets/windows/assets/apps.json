@@ -15,12 +15,6 @@
           "name": "触摸键盘",
           "cmd": ".\\tools\\qiin-tabtip.exe",
           "elevated": "false"
-        },
-        {
-          "id": "rjeOKHmcdL",
-          "name": "桌宠",
-          "cmd": ".\\assets\\gui\\sunshine-gui.exe --toolbar",
-          "elevated": "false"
         }
       ]
     },
